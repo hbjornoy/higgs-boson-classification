@@ -1,9 +1,6 @@
 # Useful starting lines
-%matplotlib inline
 import numpy as np
 import matplotlib.pyplot as plt
-%load_ext autoreload
-%autoreload 2
 from helpers import *
 
 ## Help function 1:computing the gradient
@@ -13,7 +10,7 @@ def compute_gradient(y, tx, w):
     gradient=-(1/N)*np.dot(np.transpose(tx),error)
     return gradient
 
-## Help funciton 2: calculating the mean square error
+## Help funciton 2: calculating the mean squared error
 def get_mse(y, tx, w):
     N = len(y)
     error = (y - np.dot(tx,w))
@@ -111,13 +108,31 @@ def ridge_regression(y, tx, lambda_):
     t_tx=np.transpose(tx)
     matrix_inv=np.linalg.inv(np.dot(t_tx,tx)+lambda_*2*N*I)
     w_ridge=np.dot(np.dot(matrix_inv,t_tx),y)
-    rmse=np.sqrt(2*(compute_loss(y,tx,w_ridge)+lambda_*np.linalg.norm(w_ridge,ord=2)**2))
+    rmse=np.sqrt(2*(get_mse(y,tx,w_ridge)+lambda_*np.linalg.norm(w_ridge,ord=2)**2))
     return w_ridge, rmse
 
+def split_data(x, y, ratio, seed=1):
+    """
+    split the dataset based on the split ratio. If ratio is 0.8 
+    you will have 80% of your data set dedicated to training 
+    and the rest dedicated to testing
+    """
+    # set seed
+    np.random.seed(seed)
+    
+    # split the data based on the given ratio: TODO
+    n=len(x)
+    proportion_in_training= round(n*ratio)
+    indices = np.random.permutation(x.shape[0])
+    training_idx, test_idx = indices[:proportion_in_training], indices[proportion_in_training:]
+    training_x, test_x = x[training_idx], x[test_idx]
+    training_y, test_y = y[training_idx], y[test_idx]
+    return training_x, test_x, training_y, test_y
 
 ## Logistic Regression, GD or SGD
-def logistic regression(y, tx, initial_w,max_iters, gamma):
-    
+#def logistic_regression(y, tx, initial_w,max_iters, gamma):
+#        return 1
 
 ## Regularized logistic regression, GD or SGD
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma)
+#def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+#        return 1
