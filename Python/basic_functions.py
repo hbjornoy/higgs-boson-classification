@@ -172,8 +172,39 @@ def split_data(x, y, ratio, seed=1):
     training_y, test_y = y[training_idx], y[test_idx]
     return training_x, test_x, training_y, test_y
 
-def clean_data(data):
-    data[data == -999] = 0
+def clean_data(data, replace_no_measure_with_mean = False):
+    
+    if(replace_no_measure_with_mean):
+        
+        rows, columns = data.shape
+        column_means = np.zeros(30)
+
+        #Manually counting mean for each column without -999 values. 
+        for col in range(columns):
+            c_count = 0
+            c_sum = 0
+            for row in range(rows - 1):
+                data_point = data[row][col]
+                
+                if(data_point != -999):
+                    c_count += 1
+                    c_sum += data_point
+            
+            mean_mean = c_sum / c_count            
+            column_means[col] = mean_mean
+        
+        #Replacing -999 values with column mean
+        for col in range(columns - 1):
+            for row in range(rows - 1):
+                
+                data_point = data[row][col]
+                
+                if(data_point == -999):
+                    data[row][col] = column_means[col]  
+                              
+    else:
+        data[data == -999] = 0
+    
     return data
 
 ## Logistic Regression, GD or SGD
