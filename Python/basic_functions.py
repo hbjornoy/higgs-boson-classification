@@ -172,6 +172,10 @@ def split_data(x, y, ratio, seed=1):
     training_y, test_y = y[training_idx], y[test_idx]
     return training_x, test_x, training_y, test_y
 
+def clean_data(data):
+    data[data == -999] = 0
+    return data
+
 ## Logistic Regression, GD or SGD
 def logistic_regression(y, tx, initial_w,max_iters, gamma):
         y=y.reshape(y.shape[0],1) #Må ha dette for å få det til å fungere..
