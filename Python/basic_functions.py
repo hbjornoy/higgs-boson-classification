@@ -24,19 +24,19 @@ def compute_stoch_gradient(y, tx, w, batch_size):
     
     #FORSØK PÅ "swish" 
     
-    for y_batch, tx_batch in batch_iter(y, tx, batch_size, max_iters, shuffle=True):
+    #for y_batch, tx_batch in batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
         
-        gradient=compute_gradient(y_batch, tx_batch, w)
+      #  gradient=compute_gradient(y_batch, tx_batch, w)
 
     
     #ORIGINAL FRA HEDDA SOM VIRKER HELT GARRA 
 
-    #batches = batch_iter(y, tx, batch_size, num_batches=1, shuffle=True)
-    #batch=next(batches) ## fant ingen bedre måter å gjøre dette på.. 
+    batches = batch_iter(y, tx, batch_size, num_batches=1, shuffle=True)
+    batch=next(batches) ## fant ingen bedre måter å gjøre dette på.. 
 
-    #y_batch=batch[0]
-    #tx_batch=batch[1]
-    #gradient=compute_gradient(y_batch, tx_batch, w)
+    y_batch=batch[0]
+    tx_batch=batch[1]
+    gradient=compute_gradient(y_batch, tx_batch, w)
     
     return gradient 
 
@@ -45,13 +45,56 @@ def compute_stoch_gradient(y, tx, w, batch_size):
 def build_poly(x, degree):
     # this function should return the matrix formed
     # by applying the polynomial basis to the input data
-    n=len(x)
-    phi=np.zeros((n, degree+1))
-    for j in range(degree+1): 
-        for i in range(n):
-            phi[i,j]=x[i]**j
+    n,m=x.shape
+    phi=np.zeros((n, m*(degree+1)))
+    for k in range(m):
+        for j in range(degree+1): 
+            for i in range(n):
+                phi[i,k*(m+1)+j]=x[i,k]**j
     return phi
 
+## Help fucntion 5: 
+def sigmoid(t):
+    a=np.exp(t)/(1+np.exp(t))
+    return a
+    
+## Help function 6: computing log loss: 
+def calculate_loss(y, tx, w):
+    """compute the cost by negative log likelihood."""
+    sum_=0
+    for i in range(len(y)):
+        tr_x=np.transpose(tx[i,:])
+        sum_=sum_+np.log(1+np.exp(np.dot(tr_x,w)))-np.dot(y[i],np.dot(tr_x,w))
+    return sum_
+
+## Help function 7: Standarize
+def standardize(x):
+    """Standardize the original data set."""
+    mean_x = np.mean(x, axis=0)
+    x = x - mean_x
+    std_x = np.std(x, axis=0)
+    x = x / std_x
+    return x, mean_x, std_x
+
+## Help function 8: Hessian
+def calculate_hessian(y, tx, w):
+    """return the hessian of the loss function."""
+    N=tx.shape[0]
+    tr_tx=np.transpose(tx)
+    s=np.zeros((N,N))
+    for i in range(N):
+        tr_txi=np.transpose(tx[i,:])
+        sigma=sigmoid(np.dot(tr_txi,w))
+        s[i,i]=np.dot(sigma,(1-sigma))
+    return np.dot(tr_tx,np.dot(s,tx))
+
+
+def calculate_gradient(y, tx, w):
+    """compute the gradient of loss."""
+    sigma=sigmoid(np.dot(tx,w))
+    tr_tx=np.transpose(tx)
+    grad= np.dot(tr_tx,(sigma-y))
+    return grad
 
 ## Gradient Descent
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
@@ -79,7 +122,7 @@ def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
     losses = []
     w = initial_w
     for n_iter in range(max_iters):
-        gradient=compute_stoch_gradient(y,tx,w)
+        gradient=compute_stoch_gradient(y,tx,w,batch_size)
         loss=get_mse(y,tx,w)
         w=w-gamma*gradient
         ws.append(w)
@@ -87,7 +130,7 @@ def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
         #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
         #    bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
-    return losses, ws
+    return losses, ws, w
 
 
 ## Normal Equations
@@ -130,9 +173,30 @@ def split_data(x, y, ratio, seed=1):
     return training_x, test_x, training_y, test_y
 
 ## Logistic Regression, GD or SGD
-#def logistic_regression(y, tx, initial_w,max_iters, gamma):
-#        return 1
+def logistic_regression(y, tx, initial_w,max_iters, gamma):
+        y=y.reshape(y.shape[0],1) #Må ha dette for å få det til å fungere..
+        w = initial_w
+        losses=[]
+        for iter in range(max_iters):
+            loss=calculate_loss(y, tx, w)
+            # compute the gradient: TODO
+            grad=calculate_gradient(y, tx, w)
+            # update w: TODO
+            w=w-gamma*grad
+            losses.append(loss) #usikker på om vi trenger denne.. 
+        return loss, w
+
 
 ## Regularized logistic regression, GD or SGD
-#def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
-#        return 1
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+    y=y.reshape(y.shape[0],1) #Må ha dette for å få det til å fungere..
+    w = initial_w
+    losses=[]
+    for iter in range(max_iters):
+        loss=calculate_loss(y, tx, w) + lambda_/2*np.linalg.norm(w,2)**2
+        grad=calculate_gradient(y, tx, w)+ lambda_*w
+        hessian=calculate_hessian(y, tx, w)+ lambda_
+        H_inv=np.linalg.inv(hessian)
+        w=w-np.dot(gamma,np.dot(H_inv,grad))
+        losses.append(loss) #usikker på om vi trenger denne... skal vi bare returnere siste loss?
+    return loss, w
