@@ -18,26 +18,9 @@ def get_mse(y, tx, w):
     return mse
 
 ## Help function 3: comcputing the stochastic gradient
-## Veldig fint om noen har en mer elegant løsning
 def compute_stoch_gradient(y, tx, w, batch_size):
-    
-    
-    #FORSØK PÅ "swish" 
-    
-    #for y_batch, tx_batch in batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
-        
-      #  gradient=compute_gradient(y_batch, tx_batch, w)
-
-    
-    #ORIGINAL FRA HEDDA SOM VIRKER HELT GARRA 
-
-    batches = batch_iter(y, tx, batch_size, num_batches=1, shuffle=True)
-    batch=next(batches) ## fant ingen bedre måter å gjøre dette på.. 
-
-    y_batch=batch[0]
-    tx_batch=batch[1]
-    gradient=compute_gradient(y_batch, tx_batch, w)
-    
+    for y_batch, tx_batch in batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
+        gradient=compute_gradient(y_batch, tx_batch, w)
     return gradient 
 
 
@@ -64,9 +47,16 @@ def calculate_loss(y, tx, w):
     sum_=0
     for i in range(len(y)):
         tr_x=np.transpose(tx[i,:])
+        #print('this is the shape of w')
+        #print(w.shape, tr_x.shape)
+        #print(np.dot(tr_x,w).shape)
         sum_=sum_+np.log(1+np.exp(np.dot(tr_x,w)))-np.dot(y[i],np.dot(tr_x,w))
     return sum_
-
+def classify(y):
+    for i in range(len(y)):
+        if y[i]==-1: 
+            y[i]=0
+    return y
 ## Help function 7: Standarize
 def standardize(x):
     """Standardize the original data set."""
@@ -75,18 +65,13 @@ def standardize(x):
     std_x = np.std(x, axis=0)
     x = x / std_x
     return x, mean_x, std_x
-
-## Help function 8: Hessian
-def calculate_hessian(y, tx, w):
-    """return the hessian of the loss function."""
-    N=tx.shape[0]
-    tr_tx=np.transpose(tx)
-    s=np.zeros((N,N))
-    for i in range(N):
-        tr_txi=np.transpose(tx[i,:])
-        sigma=sigmoid(np.dot(tr_txi,w))
-        s[i,i]=np.dot(sigma,(1-sigma))
-    return np.dot(tr_tx,np.dot(s,tx))
+def normalize(x):
+    n=x.shape[1]
+    for i in range(n):
+        max_=np.max(x[:,i])
+        min_=np.min(x[:,i])
+        x[:,i]=(x[:,i]-min_)/(max_-min_)
+    return x
 
 
 def calculate_gradient(y, tx, w):
@@ -108,15 +93,13 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         w=w-gamma*gradient
         ws.append(w)
         losses.append(loss)
-        #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
-        #    bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
     return losses, ws
 
 
 ## Stochastic Gradient Descent
 def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
-    batch_size=1
+    batch_size=1 #round(len(y)/100)
     # Define parameters to store w and loss
     ws = [initial_w]
     losses = []
@@ -127,9 +110,6 @@ def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
         w=w-gamma*gradient
         ws.append(w)
         losses.append(loss)
-        #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
-        #    bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
-
     return losses, ws, w
 
 
@@ -179,12 +159,10 @@ def logistic_regression(y, tx, initial_w,max_iters, gamma):
         losses=[]
         for iter in range(max_iters):
             loss=calculate_loss(y, tx, w)
-            # compute the gradient: TODO
             grad=calculate_gradient(y, tx, w)
-            # update w: TODO
             w=w-gamma*grad
-            losses.append(loss) #usikker på om vi trenger denne.. 
-        return loss, w
+            losses.append(loss) 
+        return loss, w, losses
 
 
 ## Regularized logistic regression, GD or SGD
@@ -195,8 +173,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     for iter in range(max_iters):
         loss=calculate_loss(y, tx, w) + lambda_/2*np.linalg.norm(w,2)**2
         grad=calculate_gradient(y, tx, w)+ lambda_*w
-        hessian=calculate_hessian(y, tx, w)+ lambda_
-        H_inv=np.linalg.inv(hessian)
-        w=w-np.dot(gamma,np.dot(H_inv,grad))
-        losses.append(loss) #usikker på om vi trenger denne... skal vi bare returnere siste loss?
-    return loss, w
+        w=w-gamma*grad
+        losses.append(loss) 
+    return loss, w, losses
