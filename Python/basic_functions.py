@@ -53,10 +53,11 @@ def calculate_loss(y, tx, w):
         sum_=sum_+np.log(1+np.exp(np.dot(tr_x,w)))-np.dot(y[i],np.dot(tr_x,w))
     return sum_
 def classify(y):
+    ty=np.copy(y)
     for i in range(len(y)):
         if y[i]==-1: 
-            y[i]=0
-    return y
+            ty[i]=0
+    return ty
 ## Help function 7: Standarize
 def standardize(x):
     """Standardize the original data set."""
@@ -206,8 +207,12 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     w = initial_w
     losses=[]
     for iter in range(max_iters):
-        loss=calculate_loss(y, tx, w) + lambda_/2*np.linalg.norm(w,2)**2
+        loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
         grad=calculate_gradient(y, tx, w)+ lambda_*w
+        #print('this is the grad')
+        #print(calculate_gradient(y, tx, w))
+        #print('this is the extra term')
+        #print(lambda_*w)
         w=w-gamma*grad
         losses.append(loss) 
     return loss, w, losses
@@ -216,15 +221,12 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 def log_pred(tx,w):
     probability=sigmoid(np.dot(tx,w))
     pred_y=np.zeros((len(probability)))
-    tpred_y=np.zeros((len(probability)))
     for i in range(len(probability)):
         if probability[i]>0.5:
             pred_y[i]=1
-            tpred_y[i]=1
         else:
             pred_y[i]=-1
-            tpred_y[i]=0
-    return pred_y, tpred_y
+    return pred_y
 def log_pred_acc(y,pred_y):
     counter=0
     for i in range(len(pred_y)):
