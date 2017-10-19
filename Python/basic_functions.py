@@ -94,7 +94,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         ws.append(w)
         losses.append(loss)
 
-    return losses, ws
+    return losses, ws, w
 
 
 ## Stochastic Gradient Descent
@@ -211,3 +211,24 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         w=w-gamma*grad
         losses.append(loss) 
     return loss, w, losses
+
+
+def log_pred(tx,w):
+    probability=sigmoid(np.dot(tx,w))
+    pred_y=np.zeros((len(probability)))
+    tpred_y=np.zeros((len(probability)))
+    for i in range(len(probability)):
+        if probability[i]>0.5:
+            pred_y[i]=1
+            tpred_y[i]=1
+        else:
+            pred_y[i]=-1
+            tpred_y[i]=0
+    return pred_y, tpred_y
+def log_pred_acc(y,pred_y):
+    counter=0
+    for i in range(len(pred_y)):
+        if pred_y[i]!= y[i]:
+            counter=counter+1
+    percent=counter/len(pred_y)
+    return percent, counter
