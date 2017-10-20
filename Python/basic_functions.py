@@ -72,7 +72,8 @@ def normalize(x):
     for i in range(n):
         max_=np.max(x[:,i])
         min_=np.min(x[:,i])
-        x[:,i]=(x[:,i]-min_)/(max_-min_)
+        if max_ != min_:
+            x[:,i]=(x[:,i]-min_)/(max_-min_)
     return x
 
 
