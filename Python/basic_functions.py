@@ -33,7 +33,8 @@ def build_poly(x, degree):
     for k in range(m):
         for j in range(degree+1): 
             for i in range(n):
-                phi[i,k*(m+1)+j]=x[i,k]**j
+                #phi[i,k*(m+1)+j]=x[i,k]**j
+                phi[i,k*(degree+1)+j]=x[i,k]**j
     return phi
 
 ## Help fucntion 5: 
