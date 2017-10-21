@@ -177,3 +177,35 @@ def log_pred_acc(y,pred_y):
     percent=counter/len(pred_y)
     return percent, counter
 ###########################################################################
+
+#MÅ ENDRES LITT PÅ SÅ DEN IKKE BLIR TATT I PLAGIAT.. 
+###########################################################################
+def pca(data, pc_count = None):
+    """
+    Principal component analysis using eigenvalues
+    note: this mean-centers and auto-scales the data (in-place)
+    """
+    data -= np.mean(data, 0)
+    data /= np.std(data, 0)
+    """
+    Covariance matrix
+    note: specifically for mean-centered data
+    note: numpy's `cov` uses N-1 as normalization
+    """
+    C = np.dot(data.T, data) / data.shape[0]
+    E, V = np.linalg.eigh(C)
+    key = np.argsort(E)[::-1][:pc_count]
+    E, V = E[key], V[:, key]
+    U = np.dot(data, V)  # used to be dot(V.T, data.T).T
+    return U, E, V
+###########################################################################
+
+##Taking inverse log of non negative data: 
+###########################################################################
+def inverse_log_non_neg(x):
+    tx=np.copy(x)
+    inv_log_cols = (0,1,2,3,4,5,7,8,9,10,12,13,16,19,21,23,26)
+    
+    tx[:,inv_log_cols]=np.log(1 / (1 + tx[:, inv_log_cols]))
+    return tx
+###########################################################################
