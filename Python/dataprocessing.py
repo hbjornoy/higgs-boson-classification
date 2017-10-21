@@ -1,5 +1,5 @@
 
-
+from helpers import * 
 import numpy as np
 
 ## Buld poly: builds a polynomial of degree "degree"
