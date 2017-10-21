@@ -225,6 +225,7 @@ def log_pred(tx,w):
             pred_y[i]=-1
             tpred_y[i]=0
     return pred_y, tpred_y
+
 def log_pred_acc(y,pred_y):
     counter=0
     for i in range(len(pred_y)):
