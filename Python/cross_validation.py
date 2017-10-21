@@ -30,7 +30,7 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             
         losses.append(loss)
 
-        pred_y, soppel = bf.log_pred(x, weights)    
+        pred_y = bf.log_pred(x, weights)    
         pred_acc_percent, soppel = bf.log_pred_acc(y, pred_y)
         pred_acc_percents.append(pred_acc_percent)
      
