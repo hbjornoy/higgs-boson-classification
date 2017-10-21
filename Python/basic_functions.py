@@ -155,8 +155,8 @@ def split_data(x, y, ratio, seed=1):
     training_y, test_y = y[training_idx], y[test_idx]
     return training_x, test_x, training_y, test_y
 
-def clean_data(data, replace_no_measure_with_mean = False):
-    
+def clean_data(data_x, replace_no_measure_with_mean = False):
+    data=np.copy(data_x)
     if(replace_no_measure_with_mean):
         
         rows, columns = data.shape
