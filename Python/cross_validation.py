@@ -1,4 +1,8 @@
 import numpy as np
+from methods import*
+from grad_loss import*
+from dataprocessing import *
+from proj1_helpers import *
 
 
 def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
@@ -13,25 +17,25 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
         x_test, y_test, x_tr, y_tr = split_k(x,y,k_indices, k)
         
         if(function_to_run.__name__ == "reg_logistic_regression"):
-            
+            print('I want to do log')
             lambda_ = args[0]
             initial_w = args[1]
             max_iters = args[2]
             gamma = args[3]
             
             loss, weights, losses =  function_to_run(y_tr, x_tr, lambda_, initial_w, max_iters, gamma) 
-            
+            pred_y = log_pred(x, weights) 
         elif(function_to_run.__name__ == "ridge_regression"):
             
             lambda_ = args[0]
             
-            weights, loss = bf.ridge_regression(y, x, lambda_)          
-            
+            loss, weights =ridge_regression(y, x, lambda_)  
+           
+            pred_y=predict_labels(weights, x)
             
         losses.append(loss)
 
-        pred_y = bf.log_pred(x, weights)    
-        pred_acc_percent, soppel = bf.log_pred_acc(y, pred_y)
+        pred_acc_percent, soppel = log_pred_acc(y, pred_y)
         pred_acc_percents.append(pred_acc_percent)
      
     
@@ -71,3 +75,4 @@ def split_k(x,y,k_indices, k):
     train_ind=np.ravel(train_ind)
     x_tr, y_tr= x[train_ind], y[train_ind]
     return x_test, y_test, x_tr, y_tr
+
