@@ -1,5 +1,5 @@
 import numpy as np
-from helpers import * 
+from proj1_helpers import * 
 from dataprocessing import*
 ###########################################################################
 ##Computing loss
