@@ -1,6 +1,7 @@
 import numpy as np
-from proj1_helpers import * 
 from dataprocessing import*
+from proj1_helpers import *
+
 ###########################################################################
 ##Computing loss
 ###########################################################################
@@ -37,6 +38,7 @@ def calculate_loss(y, tx, w):
 ###########################################################################
 def compute_gradient(y, tx, w):
     N = len(y)
+    y=y.reshape(y.shape[0],1)
     error = (y - np.dot(tx,w))
     gradient=-(1/N)*np.dot(np.transpose(tx),error)
     return gradient
