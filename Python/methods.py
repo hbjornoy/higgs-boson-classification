@@ -49,6 +49,7 @@ def ridge_regression(y, tx, lambda_):
     t_tx=np.transpose(tx)
     matrix_inv=np.linalg.inv(np.dot(t_tx,tx)+lambda_*2*N*I)
     w=np.dot(np.dot(matrix_inv,t_tx),y)
+    print(y.shape, tx.shape, w.shape)
     rmse=np.sqrt(2*(get_mse(y,tx,w)+lambda_*np.linalg.norm(w,ord=2)**2))
     return rmse,w
 ###########################################################################

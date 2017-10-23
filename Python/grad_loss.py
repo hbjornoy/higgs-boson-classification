@@ -9,6 +9,7 @@ from proj1_helpers import *
 ##Computing loss MSE:
 ###########################################################################
 def get_mse(y, tx, w):
+    print(y.shape, tx.shape, w.shape)
     N = len(y)
     error = (y - np.dot(tx,w))
     mse = (1/(2*N)) * np.sum(np.square(error))
