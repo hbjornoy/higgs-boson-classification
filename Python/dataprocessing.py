@@ -167,7 +167,7 @@ def log_pred(tx,w):
 ##Log pred acc: given the correct values of y and the predicted values of y, it returns
 ##  percentage and number of correct predictions
 ###########################################################################
-def log_pred_acc(y,pred_y):
+def pred_acc(y,pred_y):
     counter=0
     for i in range(len(pred_y)):
         
