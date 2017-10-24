@@ -2,7 +2,6 @@ import numpy as np
 from grad_loss import *
 from dataprocessing import *
 
-
 ##Least squares using gradient descent
 ###########################################################################
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
@@ -12,7 +11,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         w=w-gamma*gradient  
     loss=get_mse(y,tx,w)
     return loss, w
-###########################################################################
 
 
 ##Least squares using stochastic gradient descent
@@ -25,21 +23,17 @@ def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
         w=w-gamma*gradient
     loss=get_mse(y,tx,w)
     return loss, w
-###########################################################################
 
 
 ## Least squares using normal equations
 ###########################################################################
 def least_squares(y, tx): 
-    # returns mse, and optimal weights
     trans_tx=np.transpose(tx)
     a=np.dot(trans_tx,tx)
     b=np.dot(trans_tx,y)
     w=np.linalg.solve(a,b)
     mse= get_mse(y,tx,w)
-    
     return mse, w
-###########################################################################
 
 ## Ridge regression:
 ###########################################################################
@@ -51,7 +45,6 @@ def ridge_regression(y, tx, lambda_):
     w=np.dot(np.dot(matrix_inv,t_tx),y)
     rmse=np.sqrt(2*(get_mse(y,tx,w)+lambda_*np.linalg.norm(w,ord=2)**2))
     return rmse,w
-###########################################################################
 
 
 ## Logistic Regression using gradient descent
@@ -64,7 +57,6 @@ def logistic_regression(y, tx, initial_w,max_iters, gamma):
             w=w-gamma*grad 
         loss=calculate_loss(y, tx, w)
         return loss, w
-###########################################################################
 
 
 ##Regularized Logistic Regression using gradient descent:
@@ -77,7 +69,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         w=w-gamma*grad
     loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
     return loss, w
-###########################################################################
+
 
 ##Regularized Logistic Regression using NEWTON:
 ###########################################################################
@@ -91,4 +83,3 @@ def reg_logistic_regression_newton(y, tx, lambda_, initial_w, max_iters, gamma):
         w=w-gamma*(np.dot(inv_hessian,grad))
     loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
     return loss, w
-###########################################################################

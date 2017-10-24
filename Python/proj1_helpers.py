@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-"""some helper functions for project 1."""
 import csv
 import numpy as np
 
@@ -27,12 +25,16 @@ def load_csv_data(data_path, sub_sample=False):
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
     Generate a minibatch iterator for a dataset.
-    Takes as input two iterables (here the output desired values 'y' and the input data 'tx')
-    Outputs an iterator which gives mini-batches of `batch_size` matching elements from `y` and `tx`.
-    Data can be randomly shuffled to avoid ordering in the original data messing with the randomness of the minibatches.
-    Example of use :
-    for minibatch_y, minibatch_tx in batch_iter(y, tx, 32):
-        <DO-SOMETHING>
+    
+    Takes as input two iterables (here the output desired values 'y' and the input
+    data 'tx')
+    
+    Outputs an iterator which gives mini-batches of `batch_size` matching elements from
+    `y` and `tx.
+    
+    Data can be randomly shuffled to avoid ordering in the original data messing with the 
+    randomness of the minibatches.
+
     """
     data_size = len(y)
 
@@ -49,7 +51,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
-
+            
 def predict_labels(weights, data):
     """Generates class predictions given weights, and a test data matrix"""
     y_pred = np.dot(data, weights)
@@ -72,6 +74,3 @@ def create_csv_submission(ids, y_pred, name):
         writer.writeheader()
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
-            
-            
-            
