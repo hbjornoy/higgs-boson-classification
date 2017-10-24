@@ -1,4 +1,3 @@
-from helpers import * 
 import numpy as np
 from grad_loss import *
 from dataprocessing import *
@@ -11,7 +10,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         gradient=compute_gradient(y,tx,w)
         loss=get_mse(y,tx,w)
-        w=w-gamma*gradient
+        w=w-gamma*gradient        
     return loss, w
 ###########################################################################
 
@@ -38,6 +37,7 @@ def least_squares(y, tx):
     b=np.dot(trans_tx,y)
     w=np.linalg.solve(a,b)
     mse= get_mse(y,tx,w)
+    
     return mse, w
 ###########################################################################
 
