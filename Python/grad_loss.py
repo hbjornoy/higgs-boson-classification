@@ -9,7 +9,6 @@ from proj1_helpers import *
 ##Computing loss MSE:
 ###########################################################################
 def get_mse(y, tx, w):
-    print(y.shape, tx.shape, w.shape)
     N = len(y)
     error = (y - np.dot(tx,w))
     mse = (1/(2*N)) * np.sum(np.square(error))
@@ -22,9 +21,6 @@ def calculate_loss(y, tx, w):
     sum_=0
     for i in range(len(y)):
         tr_x=np.transpose(tx[i,:])
-        #print('this is the shape of w')
-        #print(w.shape, tr_x.shape)
-        #print(np.dot(tr_x,w).shape)
         sum_=sum_+np.log(1+np.exp(np.dot(tr_x,w)))-np.dot(y[i],np.dot(tr_x,w))
     return sum_
 ###########################################################################
@@ -60,3 +56,17 @@ def calculate_gradient(y, tx, w):
     grad= np.dot(tr_tx,(sigma-y))
     return grad
 ###########################################################################
+
+
+####HAR BARE PRØVD NOE, MEN SER IKKE UT SOM OM DET FUNGERER... 
+def calculate_hessian(y, tx, w):
+    """return the hessian of the loss function."""
+    # *************************************************
+    # calculate hessian: TODO
+    xw = np.dot(tx,w)
+    xT = np.transpose(tx)
+    s = sigmoid(xw)*(1-sigmoid(xw))
+    S = np.diagflat(s)
+    H = np.dot(xT, np.dot(S,tx))
+    return  H
+    # *************************************************
