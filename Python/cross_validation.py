@@ -23,15 +23,32 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             max_iters = args[2]
             gamma = args[3]
             
-            loss, weights, losses =  function_to_run(y_tr, x_tr, lambda_, initial_w, 
-                                                     max_iters, gamma) 
+            loss, weights =  function_to_run(y_tr, x_tr, lambda_, initial_w, 
+                                             max_iters, gamma) 
             pred_y = log_pred(x, weights) 
+        
+        elif(function_to_run.__name__ == "logistic_regression"):
+            initial_w = args[0]
+            max_iters = args[1]
+            gamma = args[2]
+            
+            loss, weights =  function_to_run(y_tr, x_tr, initial_w, max_iters, gamma) 
+            pred_y = log_pred(x, weights) 
+            print(pred_y)
             
         elif(function_to_run.__name__ == "ridge_regression"):
             
             lambda_ = args[0]
             
             loss, weights =ridge_regression(y, x, lambda_)  
+            pred_y=predict_labels(weights, x)
+            
+        elif(function_to_run.__name__ == "alt_ridge_regression"):
+            
+            lambda_ = args[0]
+            
+            loss, weights =ridge_regression(y, x, lambda_)  
+           
             pred_y=predict_labels(weights, x)
             
         losses.append(loss)

@@ -159,7 +159,7 @@ def log_pred(tx,w):
         if probability[i]>0.5:
             pred_y[i]=1
         else:
-            pred_y[i]=-1
+            pred_y[i]=0
 
     return pred_y
 ###########################################################################
@@ -170,6 +170,7 @@ def log_pred(tx,w):
 def pred_acc(y,pred_y):
     counter=0
     for i in range(len(pred_y)):
+        
         if pred_y[i]!= y[i]:
             counter=counter+1
     percent=counter/len(pred_y)
