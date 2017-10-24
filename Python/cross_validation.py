@@ -17,7 +17,7 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
         x_test, y_test, x_tr, y_tr = split_k(x,y,k_indices, k)
         
         if(function_to_run.__name__ == "reg_logistic_regression"):
-            print('I want to do log')
+
             lambda_ = args[0]
             initial_w = args[1]
             max_iters = args[2]
