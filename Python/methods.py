@@ -96,7 +96,4 @@ def reg_logistic_regression_newton(y, tx, lambda_, initial_w, max_iters, gamma):
         w=w-gamma*(np.dot(inv_hessian,grad))
     loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
     return loss, w
-<<<<<<< HEAD
-=======
-###########################################################################
->>>>>>> 82c9259928881bc85b83dfb865f4ec1b4832214a
+
