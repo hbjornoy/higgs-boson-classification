@@ -13,7 +13,7 @@ def build_poly(x, degree):
                 #phi[i,k*(m+1)+j]=x[i,k]**j
                 phi[i,k*(degree+1)+j]=x[i,k]**j
     return phi
-###########################################################################
+
 
 ##Sigmoid: Function used in logistic regression
 ###########################################################################
@@ -21,7 +21,7 @@ def sigmoid(t):
     a=np.exp(t)/(1+np.exp(t))
     return a
     
-###########################################################################
+
 
 ## Classify: Takes y from 1 and -1 to 1 and 0
 ###########################################################################
@@ -31,18 +31,7 @@ def classify(y):
         if y[i]==-1: 
             ty[i]=0
     return ty
-###########################################################################
 
-##Standardize: Standardizes the data
-###########################################################################
-def standardize(x):
-    """Standardize the original data set."""
-    mean_x = np.mean(x, axis=0)
-    x = x - mean_x
-    std_x = np.std(x, axis=0)
-    x = x / std_x
-    return x, mean_x, std_x
-###########################################################################
 
 
 ##Nomralize: normalizes the data
@@ -55,7 +44,7 @@ def normalize(x):
         if max_ != min_:
             x[:,i]=(x[:,i]-min_)/(max_-min_)
     return x
-###########################################################################
+
 
 
 ##Split data: taken from ML course. 
@@ -77,7 +66,7 @@ def split_data(x, y, ratio, seed=1):
     training_x, test_x = x[training_idx], x[test_idx]
     training_y, test_y = y[training_idx], y[test_idx]
     return training_x, test_x, training_y, test_y
-###########################################################################
+
 
 
 ##Clean data: Takes care of the not reccorded values in a number of different ways
@@ -148,9 +137,10 @@ def clean_data(data_x, replace_no_measure_with_mean = False, replace_no_measure_
         data[data == -999] = 0
     
     return data
-###########################################################################
 
-##Log pred: calculates the pobability and select y value 1 or -1
+
+## Log pred: 
+## calculates the pobability and select y value 1 or -1
 ###########################################################################
 def log_pred(tx,w):
     probability=sigmoid(np.dot(tx,w))
@@ -162,49 +152,45 @@ def log_pred(tx,w):
             pred_y[i]=0
 
     return pred_y
-###########################################################################
 
-##Log pred acc: given the correct values of y and the predicted values of y, it returns
-##  percentage and number of correct predictions
+
+
+## Log pred acc: 
+## given the correct values of y and the predicted values of y, it returns
+## percentage and number of correct predictions
 ###########################################################################
 def pred_acc(y,pred_y):
     counter=0
     for i in range(len(pred_y)):
-        
         if pred_y[i]!= y[i]:
             counter=counter+1
     percent=counter/len(pred_y)
     return percent, counter
-###########################################################################
 
-#MÅ ENDRES LITT PÅ SÅ DEN IKKE BLIR TATT I PLAGIAT.. 
+
+
+## Principal Component Analysis: 
+## takes inn the data and desired number of dimensions, returns the transformed data,
+## eigenvalues and eigenvectors of the covariance matrix. 
 ###########################################################################
-def pca(data, pc_count = None):
-    """
-    Principal component analysis using eigenvalues
-    note: this mean-centers and auto-scales the data (in-place)
-    """
+def pca(data, dimensions = None):
+    #standarizing the data:
     data -= np.mean(data, 0)
     data /= np.std(data, 0)
-    """
-    Covariance matrix
-    note: specifically for mean-centered data
-    note: numpy's `cov` uses N-1 as normalization
-    """
-    C = np.dot(data.T, data) / data.shape[0]
-    E, V = np.linalg.eigh(C)
-    key = np.argsort(E)[::-1][:pc_count]
-    E, V = E[key], V[:, key]
-    U = np.dot(data, V)  # used to be dot(V.T, data.T).T
-    return U, E, V
-###########################################################################
-
-##Taking inverse log of non negative data: 
-###########################################################################
-def inverse_log_non_neg(x):
-    tx=np.copy(x)
-    inv_log_cols = (0,1,2,3,4,5,7,8,9,10,12,13,16,19,21,23,26)
     
-    tx[:,inv_log_cols]=np.log(1 / (1 + tx[:, inv_log_cols]))
-    return tx
-###########################################################################
+    #calculating the covariance, sigma:
+    sigma = np.dot(data.T, data) / data.shape[0]
+    
+    #finding eigenvalues and vectors
+    eig_val, eig_vec = np.linalg.eigh(sigma)
+    
+    #sorting them in order of deceasing eigenvalue. 
+    #Choosing only the desired number of dimensions
+    key = np.argsort(eig_val)[::-1][:dimensions]
+    eig_val, eig_vec = eig_val[key], eig_vec[:, key]
+    
+    #tranforming the data using the principal components: 
+    trans_data = np.dot(data, eig_vec)  
+    return trans_data, eig_val, eig_vec
+
+
