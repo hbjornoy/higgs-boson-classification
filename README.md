@@ -15,7 +15,7 @@ This folder contains the following files:
 
 
 These files might need explenation
-- - - - - - - - - - - - - - - - - -
+- - - 
 #### cross_validation.py
 Contains the cross_validation code used by the two Jupyter Notebook files. 
 
