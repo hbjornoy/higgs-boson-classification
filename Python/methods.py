@@ -16,7 +16,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 ##Least squares using stochastic gradient descent
 ###########################################################################
 def least_squares_SGD(y, tx, initial_w,max_iters, gamma):
-    batch_size=1 #round(len(y)/100)
+    batch_size=1 
     w = initial_w
     for n_iter in range(max_iters):
         gradient=compute_stoch_gradient(y,tx,w,batch_size)
@@ -45,19 +45,6 @@ def ridge_regression(y, tx, lambda_):
     w=np.dot(np.dot(matrix_inv,t_tx),y)
     rmse=np.sqrt(2*(get_mse(y,tx,w)+lambda_*np.linalg.norm(w,ord=2)**2))
     return rmse,w
-
-## Alternative Ridge regression:
-###########################################################################
-def alt_ridge_regression(y, tx, lambda_):
-    N,M=tx.shape
-    I=np.identity(M)
-    t_tx=np.transpose(tx)
-    a=(np.dot(t_tx,tx)+lambda_*2*N*I)
-    b=np.dot(t_tx,y)
-    w=np.linalg.solve(a,b)
-    rmse=np.sqrt(2*(get_mse(y,tx,w)+lambda_*np.linalg.norm(w,ord=2)**2))
-    return rmse,w
-###########################################################################
 
 
 ## Logistic Regression using gradient descent
@@ -96,4 +83,5 @@ def reg_logistic_regression_newton(y, tx, lambda_, initial_w, max_iters, gamma):
         w=w-gamma*(np.dot(inv_hessian,grad))
     loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
     return loss, w
+
 
