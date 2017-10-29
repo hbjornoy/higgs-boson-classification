@@ -1,5 +1,5 @@
 import numpy as np
-from methods import*
+from implementations import*
 from grad_loss import*
 from dataprocessing import *
 from proj1_helpers import *
@@ -36,13 +36,6 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             pred_y = log_pred(x, weights) 
             
         elif(function_to_run.__name__ == "ridge_regression"):
-            
-            lambda_ = args[0]
-            
-            loss, weights =ridge_regression(y, x, lambda_)  
-            pred_y=predict_labels(weights, x)
-            
-        elif(function_to_run.__name__ == "alt_ridge_regression"):
             
             lambda_ = args[0]
             
