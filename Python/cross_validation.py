@@ -23,7 +23,7 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             max_iters = args[2]
             gamma = args[3]
             
-            loss, weights =  function_to_run(y_tr, x_tr, lambda_, initial_w, 
+            weights, loss =  function_to_run(y_tr, x_tr, lambda_, initial_w, 
                                              max_iters, gamma) 
             pred_y = log_pred(x, weights) 
         
@@ -32,14 +32,14 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             max_iters = args[1]
             gamma = args[2]
             
-            loss, weights =  function_to_run(y_tr, x_tr, initial_w, max_iters, gamma) 
+            weights, loss =  function_to_run(y_tr, x_tr, initial_w, max_iters, gamma) 
             pred_y = log_pred(x, weights) 
             
         elif(function_to_run.__name__ == "ridge_regression"):
             
             lambda_ = args[0]
             
-            loss, weights =ridge_regression(y, x, lambda_)  
+            weights, loss =ridge_regression(y, x, lambda_)  
             pred_y=predict_labels(weights, x)
             
         elif(function_to_run.__name__ == "least_squares_GD"):
@@ -48,7 +48,7 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             max_iters = args[1]
             gamma = args[2]  
              
-            loss, weights = least_squares_GD(y, x, weights, max_iters, gamma)
+            weights, loss = least_squares_GD(y, x, weights, max_iters, gamma)
             pred_y = predict_labels(weights, x)
             
         elif(function_to_run.__name__ == "least_squares_SGD"):
@@ -57,12 +57,12 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             max_iters = args[1]
             gamma = args[2]  
              
-            loss, weights = least_squares_SGD(y, x, weights, max_iters, gamma)
+            weights, loss = least_squares_SGD(y, x, weights, max_iters, gamma)
             pred_y = predict_labels(weights, x)
             
         elif(function_to_run.__name__ == "least_squares"):
                          
-            loss, weights = least_squares(y, x)
+            weights, loss = least_squares(y, x)
             pred_y = predict_labels(weights, x)
         
         losses.append(loss)
