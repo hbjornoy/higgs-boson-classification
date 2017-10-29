@@ -71,4 +71,17 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     return loss, w
 
 
+##Regularized Logistic Regression using NEWTON:
+###########################################################################
+def reg_logistic_regression_newton(y, tx, lambda_, initial_w, max_iters, gamma):
+    y=y.reshape(y.shape[0],1) #So that dimensions matches
+    w = initial_w
+    for iter in range(max_iters):
+        hessian=calculate_hessian(y, tx, w)
+        inv_hessian=np.linalg.inv(hessian)
+        grad=calculate_gradient(y, tx, w)+ lambda_*w
+        w=w-gamma*(np.dot(inv_hessian,grad))
+    loss=calculate_loss(y, tx, w) + (lambda_/2)*np.linalg.norm(w,2)**2
+    return loss, w
+
 

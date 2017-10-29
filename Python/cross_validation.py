@@ -42,6 +42,36 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
             loss, weights =ridge_regression(y, x, lambda_)  
             pred_y=predict_labels(weights, x)
             
+        elif(function_to_run.__name__ == "alt_ridge_regression"):
+            
+            lambda_ = args[0]
+            
+            loss, weights =ridge_regression(y, x, lambda_)  
+            pred_y=predict_labels(weights, x)
+            
+        elif(function_to_run.__name__ == "least_squares_GD"):
+                        
+            weights = args[0]
+            max_iters = args[1]
+            gamma = args[2]  
+             
+            loss, weights = least_squares_GD(y, x, weights, max_iters, gamma)
+            pred_y = predict_labels(weights, x)
+            
+        elif(function_to_run.__name__ == "least_squares_SGD"):
+                        
+            weights = args[0]
+            max_iters = args[1]
+            gamma = args[2]  
+             
+            loss, weights = least_squares_SGD(y, x, weights, max_iters, gamma)
+            pred_y = predict_labels(weights, x)
+            
+        elif(function_to_run.__name__ == "least_squares"):
+                         
+            loss, weights = least_squares(y, x)
+            pred_y = predict_labels(weights, x)
+        
         losses.append(loss)
 
         pred_acc_percent, counter = pred_acc(y, pred_y)
@@ -61,7 +91,7 @@ def cross_validation(function_to_run, y, x, num_of_k_fold, *args):
 
 
 def build_k_indices(y, k_fold, seed):
-    """build k indices for k-fold."""
+
     num_row = y.shape[0]
     interval = int(num_row / k_fold)
     np.random.seed(seed)
@@ -69,13 +99,14 @@ def build_k_indices(y, k_fold, seed):
     k_indices = [indices[k * interval: (k + 1) * interval]
                  for k in range(k_fold)]
     return np.array(k_indices)
- 
-    
+
+
 def split_k(x,y,k_indices, k):
-    #Given the data x, y, k_indices build by build_k_idiices, and k
-    #Splits the data into training and test data, where the k-th fold is the test data
+
     x_test, y_test= x[k_indices[k]], y[k_indices[k]]
     train_ind=np.delete(k_indices,k,0)
     train_ind=np.ravel(train_ind)
     x_tr, y_tr= x[train_ind], y[train_ind]
+
     return x_test, y_test, x_tr, y_tr
+
