@@ -1,4 +1,4 @@
-# CS-433-Project-1
+# CS-433 Project 1 - powerpuffz
 Machine learning CS-433 Project 1 - EPFL
 
 This repository contains two parts, the code and report. 
