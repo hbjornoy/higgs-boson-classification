@@ -3,11 +3,9 @@ Machine learning CS-433 Project 1 - EPFL
 
 This repository contains two parts, code and report. 
 
-# Python 
+### Python 
 
 This folder contains the following files: 
-
-PYTHON SCRIPTS
 - run.py
 - implementations.py
 - cross_validation
@@ -15,7 +13,9 @@ PYTHON SCRIPTS
 - grad_loss.py
 - proj1_helpers.py
 
-JUPYTER NOTEBOOK
+### Jupyter notebook
+
+This folder contains the following files: 
 - basic_methods_implemented.ipynb
 - step_by_step.ipynb
 
