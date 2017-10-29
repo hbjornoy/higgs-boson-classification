@@ -3,7 +3,7 @@ Machine learning CS-433 Project 1 - EPFL
 
 This repository contains two parts, the code and report. 
 
-### Python 
+## Python 
 
 This folder contains the following files: 
 - run.py
@@ -27,8 +27,7 @@ These files need explenation:
 
 
 
-
-### Jupyter notebook
+## Jupyter notebook
 
 This folder contains the following files: 
 - basic_methods_implemented.ipynb
