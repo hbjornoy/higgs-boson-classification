@@ -14,7 +14,7 @@ This folder contains the following files:
 - proj1_helpers.py
 
 
-These files might need explenation
+Of these files the following might need more explenation: 
 
 #### cross_validation.py
 - Contains the cross_validation code used by the two Jupyter Notebook files. 
@@ -32,8 +32,8 @@ This folder contains the following files:
 - basic_methods_implemented.ipynb
 - step_by_step.ipynb
 
-These files might need explenation: 
------------------------------------
+Of these files the following might need more explenation: 
+
 #### basic_methods_implemented.ipynb 
 - Contains the implementations of the 6 basic functions, including optimization of hyperparameters to have a base comparison of the 6 methods. 
 
